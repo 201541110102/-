@@ -1,0 +1,166 @@
+include <stdio.h>
+#include <time.h>
+#include <stdlib.h>/*函数声明*/ 
+struct user{
+   int grade;
+   char f[10];
+   int number;
+   char name[10];
+   int a;
+   double b;
+}; 
+void  main()
+{  int i,n;
+   struct user s[50];
+   struct user input_user();
+   int select,user,computer; 
+   void judge(int user, int computer);
+   void output_user(struct user s[],int n);
+  void sort_user(struct user s[],int n);/*显示模式以供选择*/
+	printf("Stone scissors cloth\n");
+	printf("\n");
+	printf("1-Practice mode   2-Operational mode  3-Exit\n");
+	printf("\n");/*选择模式*/
+	printf("Please select the input(1，2 or 3)；");/*1代表练习模式，2代表实战模式，3代表退出*/
+	scanf("%d",&select);
+   switch(select)
+	{
+	case 0:	break;
+    case 1:               /*练习模式*/
+   { 
+	  srand((unsigned)time(NULL)); //初始化随机数*/
+      printf("Enter the game\n");/*进入游戏*/
+	  judge(user,computer);
+   } break;
+   case 2: 
+   {printf("Number of users：");/*游戏人数*/
+   scanf("%d",&n);
+   
+     for(i=0;i<n;i++)
+    {
+   	printf("Please enter the basic information of the %d user：\n",i+1);/*输入玩家基本信息*/
+   	s[i]=input_user();
+    }
+    
+   sort_user(s,n);
+   printf("\n"); 
+   printf("Ranking list\n");/*排行榜*/
+   output_user(s,n);
+   } break;
+	}
+}
+void judge(int user, int computer)/*自定义函数*/
+{   
+    int i,a=0;int b=0;
+    printf("Four wins in seven innings\n");/*7局4胜*/
+    printf("\n");
+	for(i=1;i<=7;i++)
+	{   
+		printf("Please punch(1-scissors、2-stone、3-cloth):");
+		scanf("%d",&user);
+		computer=rand()%3+1; /*产生1-3随机数*/
+		printf("computer==%s\n",computer==1?"scissors":computer==2?"stone":"cloth");
+		switch(computer-user) /*用电脑产生的数和用户输入的数的差值来判断输赢*/
+		{
+		case 0:
+			printf("dogfall\n");/*平局*/
+			break;
+		case 1:
+		case -2:	
+			a++;printf("computer win\n"); /*电脑赢*/
+			break;
+		case -1:
+		case 2:
+		b++;
+			printf("user win\n");/*玩家赢*/
+			
+		}
+	}
+	printf("\n");
+    printf("computer win %d games\n",a);/*判断总体是电脑赢还是玩家赢*/
+	printf("user win %d games\n",b);
+	if(b>a)
+		printf("user win \n");
+		else if(b<a)
+		 	printf("computer win \n");
+		 	else if(b==a)
+		 	printf("dogfall\n");
+}
+
+struct user  input_user ()/*实战模式*/
+   {double count=0; char c; 
+   double e=0;
+   	struct user s;
+    int computer;
+    srand((unsigned)time(NULL)); /*初始化随机数*/
+   	printf("Enter the game\n");/*进入游戏*/
+	printf("Please enter the grade    class ：");/*输入年级 班级*/
+	scanf("%d%s",&s.grade,&s.f);
+	printf("Please enter the name     student number:");/*输入名字 学号*/
+	scanf("%d%s",&s.number,&s.name); 
+	printf("Enter the game\n");
+	printf("At least seven innings\n");/*最少7局*/
+    do { 
+	    printf("Please punch(1-scissor、2-stone、3-cloth):");
+		scanf("%d",&s.a);
+		computer=rand()%3+1; /*产生1-3随机数*/
+		printf("computer==%s\n",computer==1?"scissors":computer==2?"stone":"cloth");
+		switch(computer-s.a) /*用电脑产生的数和用户输入的数的差值来判断输赢*/
+		{
+		case 0:
+		count++;
+			printf("dogfall\n");/*平局*/
+			break;
+			
+		case 1:
+		case -2:
+		    count++;
+			printf("computer win\n");/*电脑赢*/
+			break;
+			
+		case -1:
+		case 2:
+			{
+		    e++;count++;	
+			printf("user win\n");/*玩家啊赢*/
+		
+			}
+		}
+		
+		printf("Continue to game keys 'Y' ,the other key to exit");/*Y为继续游戏，其他键均为退出*/
+		getchar();
+		c=getchar();
+	   }while(c=='y' || c=='Y');
+	   s.b=e*100/count;
+	printf("The probability of players to win (%%)：%.2f\n",s.b);/*取胜概率*/
+	return s; 
+}
+
+void sort_user(struct user s[],int n)
+{
+	int i,j,index;
+	struct user temp;
+	for(i=0;i<n-1;i++){
+		index=i;
+		for(j=i;j<n;j++)
+		if(s[j].b>s[index].b)
+		index=j;
+		temp=s[i];
+		s[i]=s[index];
+		s[index]=temp;
+	}
+}
+
+
+void output_user(struct user s[],int n)
+{
+	int i;
+	printf("\n");  
+	printf("\n   grade     class     student number     name     the probability of winning(%%)\n");
+	
+	for(i=0;i<n;i++)
+{	printf("\n"); 
+	printf("%-10d%-15s%-15d%-10s%.2f\n",s[i].grade,s[i].f,s[i].number,s[i].name,s[i].b);
+	
+}
+}
